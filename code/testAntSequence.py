@@ -2,6 +2,9 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+from LucasKanadeAffine import LucasKanadeAffine
+from SubtractDominantMotion import SubtractDominantMotion
+import cv2
 
 # write your script here, we recommend the above libraries for making your animation
 
@@ -23,7 +26,7 @@ parser.add_argument(
 )
 parser.add_argument(
     '--seq_file',
-    default='../data/antseq.npy',
+    default='data/data/antseq.npy',
 )
 
 args = parser.parse_args()
@@ -31,6 +34,8 @@ num_iters = args.num_iters
 threshold = args.threshold
 tolerance = args.tolerance
 seq_file = args.seq_file
+
+tolerance = 0.1
 
 seq = np.load(seq_file)
 
@@ -41,3 +46,18 @@ HINT:
 3. Use the SubtractDominantMotion function to compute the motion mask between consecutive frames.
 4. Use the motion 'masks; array for visualization.
 '''
+
+
+#tracked_rect = rect
+for f in range(seq.shape[-1]-1):
+    prev_img = seq[:,:,f].copy()
+    img = seq[:,:,f+1].copy()
+
+    motion = SubtractDominantMotion(prev_img, img, threshold, num_iters, tolerance)
+    motion_img = img+motion
+    cv2.imwrite(f"results_ant/img/fig_{f}.jpg", 255*(motion_img))
+    cv2.imwrite(f"results_ant/mask/fig_{f}.jpg", 255*(motion))
+
+    print(f"Finished frame {f+1}")
+
+print("Done")

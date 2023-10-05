@@ -35,4 +35,3 @@ q1.4:
     save_prefix: 'result/q1_4_girl_'
     first_rect: [280, 152, 330, 318]
     plot_frames: [0, 19, 39, 59, 79]
-

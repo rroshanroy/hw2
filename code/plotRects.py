@@ -24,6 +24,7 @@ from functools import partial
 
 
 def add_prev_patch(i, lk_res, patch):
+    print("Lalalalala2")
     rect = lk_res[i]
     pt_topleft = rect[:2]
     pt_bottomright = rect[2:4]
@@ -46,6 +47,7 @@ def update_fig(i, lk_res, seq, patch, im, save_ids, save_prefix):
     patch.set_width(pt_bottomright[0] - pt_topleft[0])
     patch.set_height(pt_bottomright[1] - pt_topleft[1])
     patch.set_xy((pt_topleft[0], pt_topleft[1]))
+    print("Lalalalala")
     if i in save_ids:
         plt.savefig(
             save_prefix + str(i) + ".png",
@@ -99,6 +101,7 @@ def animate_tracks(seq_path, rects_path, rects_path_prev=None, save_ids=[], save
     im = ax.imshow(It1, cmap='gray')
 
     if rects_path_prev is not None:
+        #breakpoint()
         ani_patch = animation.FuncAnimation(
             fig,
             partial(add_prev_patch, lk_res=lk_res_prev, patch=patch_prev),
@@ -107,6 +110,7 @@ def animate_tracks(seq_path, rects_path, rects_path_prev=None, save_ids=[], save
             blit=False,
             repeat=False
         )
+    #breakpoint()
 
     ani = animation.FuncAnimation(
         fig,
@@ -144,6 +148,7 @@ if __name__ == '__main__':
             params = yaml.safe_load(f)
         os.makedirs(params["save_dir"], exist_ok=True)
         test = params[args[1]][args[2]]
+        #breakpoint()
         seq_path = test['seq_path']
         rect_path = test['rect_path']
         rect_path_prev = test.get('rect_path_prev', None)

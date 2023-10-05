@@ -19,6 +19,37 @@ def SubtractDominantMotion(image1, image2, threshold, num_iters, tolerance):
     mask = np.ones(image1.shape, dtype=bool)
 
     ################### TODO Implement Substract Dominent Motion ###################
-    
+    warp = LucasKanadeAffine(image1, image2, threshold, num_iters)
+    #warp = InverseCompositionAffine(image1, image2, threshold, num_iters)
+    img1_warp = affine_transform(image1.T, np.linalg.inv(warp)).T
+
+    dif = np.abs(image2 - img1_warp)
+    mask = np.where(dif>tolerance, 1, 0)
+
+    temp_mask = np.ones((image1.shape[0], image1.shape[1]), dtype=np.uint8)
+    temp_mask = affine_transform(temp_mask.T, np.linalg.inv(warp)).T
+    mask = np.where(temp_mask, mask, 0)
+
+    # Q3 ant
+    # mask = binary_dilation(mask, iterations = 1)
+    # mask = binary_erosion(mask, iterations = 1)
+    # mask = binary_dilation(mask, iterations = 1)
+    # mask = binary_dilation(mask, iterations = 1)
+
+    # Q3 aerial
+    # mask = binary_erosion(mask, iterations = 1)
+    # mask = binary_dilation(mask, iterations = 3)
+    # mask = binary_dilation(mask, iterations = 1)
+
+    # Q2 ant
+    # mask = binary_dilation(mask, iterations = 1)
+    # mask = binary_erosion(mask, iterations = 1)
+    # mask = binary_dilation(mask, iterations = 1)
+    # mask = binary_dilation(mask, iterations = 1)
+
+    # Q2 aerial
+    mask = binary_erosion(mask, iterations = 1)
+    mask = binary_dilation(mask, iterations = 3)
+    mask = binary_dilation(mask, iterations = 1)
 
     return mask.astype(bool)
